@@ -6,12 +6,7 @@ favicon = "favicon.ico"
 [theme]
 base="dark"
 backgroundColor="#15171a"
-primaryColor = "#1f77b4"
-# Background color of the sidebar
-secondaryBackgroundColor = "#f0f0f5"
-# Text color of the main content
 textColor = "#000000"
-# Font used for the app
 font = "sans serif"
 
 [server]
