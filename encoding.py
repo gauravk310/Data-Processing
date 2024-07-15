@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OrdinalEncoder
-
 def app():
     st.title("Encoding Page")
     st.image('static/ohe.png',width=700)
