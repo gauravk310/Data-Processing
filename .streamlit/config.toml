@@ -6,9 +6,6 @@ favicon = "favicon.ico"
 [theme]
 base="dark"
 backgroundColor="#15171a"
-textColor = "#000000"
-font = "sans serif"
-
 [server]
 # Enable/disable CORS protection (default is true)
 enableCORS = false
