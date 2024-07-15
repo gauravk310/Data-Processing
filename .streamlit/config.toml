@@ -1,7 +1,6 @@
 [general]
 title = "DATA"
 description = "Data Preprocessing Tool"
-favicon = "favicon.ico"
 
 [theme]
 base="dark"
