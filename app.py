@@ -448,6 +448,13 @@ def encoding():
                 
 def about():
     st.title("About Us")
+    st.header("Improvment")
+    st.markdown("""
+1. Design
+2.Multiple Methos for Outlier Detection
+3.Multiple Methos for Encoding
+4. More Graph plot options
+""")
                     
 
 
