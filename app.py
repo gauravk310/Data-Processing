@@ -28,44 +28,51 @@ def home():
         # st.success("Dataset Upload")
         df = file
         st.session_state.data['file'] = df
-        st.subheader('1. Dataset')
-        st.write(df)
-        st.subheader('2. Mathematical Discription')
-        st.write(df.describe())
-        st.subheader('3. Missing Values')
-        miss = df.isnull().sum().to_dict()
-        st.table(miss)
-        st.subheader('4. Dataset Size')
-        st.write(f"Shape Of DataSet : {df.shape}")
-        st.subheader('5. Duplicate Values')
-        if df.duplicated().sum() == 0:
-            st.success("There Are No Duplicate Freatures..!!!")
-        else:
-            st.warning("There Are Some Duplicate Freatures ...!!")
-        st.subheader('6. Corealtion Of Freatures')
-        st.write(df.corr(numeric_only=True))
+        with st.container(border=True):
+            st.subheader('1. Dataset')
+            st.write(df)
+        with st.container(border=True):
+            st.subheader('2. Mathematical Discription')
+            st.write(df.describe())
+        with st.container(border=True):
+            st.subheader('3. Missing Values')
+            miss = df.isnull().sum().to_dict()
+            st.table(miss)
+        with st.container(border=True):
+            st.subheader('4. Dataset Size')
+            st.write(f"Shape Of DataSet : {df.shape}")
+        with st.container(border=True):
+            st.subheader('5. Duplicate Values')
+            if df.duplicated().sum() == 0:
+                st.success("There Are No Duplicate Freatures..!!!")
+            else:
+                st.warning("There Are Some Duplicate Freatures ...!!")
+        with st.container(border=True):
+            st.subheader('6. Corealtion Of Freatures')
+            st.write(df.corr(numeric_only=True))
         
-        st.subheader('7. Numerical Column :')
-        try:
-            cols =st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
-            cola,colb = st.columns(2)
-            cola.subheader(cols)  
-            cola.write(df[cols])
-            colb.subheader("Description : ")
-            colb.write(df[cols].describe())
-        except Exception:
-            st.info("Numerical Columns Not Found...!")
-        
-        st.subheader('7.Non -  Numerical Column :')
-        try:
-            cols =st.radio("Features",[x for x in df.columns if not pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
-            cola,colb = st.columns(2)
-            cola.write(cols)  
-            cola.write(df[cols])
-            colb.subheader("Description : ")
-            colb.write(df[cols].describe())
-        except Exception:
-            st.info("Non-Numberical Data Not Found...!")
+        with st.container(border=True):
+            st.subheader('7. Numerical Column :')
+            try:
+                cols =st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
+                cola,colb = st.columns(2)
+                cola.subheader(cols)  
+                cola.write(df[cols])
+                colb.subheader("Description : ")
+                colb.write(df[cols].describe())
+            except Exception:
+                st.info("Numerical Columns Not Found...!")
+        with st.container(border=True):
+            st.subheader('8.Non -  Numerical Column :')
+            try:
+                cols =st.radio("Features",[x for x in df.columns if not pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
+                cola,colb = st.columns(2)
+                cola.write(cols)  
+                cola.write(df[cols])
+                colb.subheader("Description : ")
+                colb.write(df[cols].describe())
+            except Exception:
+                st.info("Non-Numberical Data Not Found...!")
 
 def select_columns(dataframe, columns):
     try:
@@ -98,10 +105,12 @@ def clean():
             )
     if app=='Columns':
         cols = [x for x in df.columns]
-        features = st.multiselect("Freature",cols,default=cols)
-        df = select_columns(df,features)
-        st.write(df.shape)
-        st.write(df)
+        with st.container(border=True):
+            features = st.multiselect("Freature",cols,default=cols)
+            st.write(df.shape)
+        with st.container(border=True):
+            df = select_columns(df,features)
+            st.write(df)
         try:
             if st.button("Save Dataset"):
                 st.session_state.data['file'] = df
@@ -115,16 +124,17 @@ def clean():
         st.write(df.shape)
         # st.write(df)
         st.write(df)
-        index = st.multiselect("Select Index Of Row : ",options=[x for x in range(row)])
-        try:
-            if st.button("Save Dataset"):
-                df1 = df.drop(index).reset_index(drop=True)
-                st.session_state.data['file'] = df1
-                st.write(df1.shape)
-                st.write(df1)
-                st.success("Data Saved Successfully...")
-        except Exception:
-            st.warning("No Dataset Found ...")
+        with st.container(border=True):
+            index = st.multiselect("Select Index Of Row : ",options=[x for x in range(row)])
+            try:
+                if st.button("Save Dataset"):
+                    df1 = df.drop(index).reset_index(drop=True)
+                    st.session_state.data['file'] = df1
+                    st.write(df1.shape)
+                    st.write(df1)
+                    st.success("Data Saved Successfully...")
+            except Exception:
+                st.warning("No Dataset Found ...")
 
 
 def analysis():
@@ -149,55 +159,63 @@ def analysis():
                 },orientation='horizontal'
             )
     if app == 'Univariant':
+
         method = st.selectbox("Select Method",['count-plot','dist-plot'])
         if method == 'count-plot':
-            st.subheader('Count Plot')
-            # col1,col2 = st.columns(2)
-            col = st.radio("Features",[x for x in df.columns],horizontal=True)
-            try:
-                fig, ax = plt.subplots()
-                sb.countplot(x=col, data=df, ax=ax)
-                st.pyplot(fig)
-            except Exception:
-                st.warning("Unsupported Format....!")
+            with st.container(border=True):
+                st.subheader('Count Plot')
+                # col1,col2 = st.columns(2)
+                col = st.radio("Features",[x for x in df.columns],horizontal=True)
+            with st.container(border=True):
+                try:
+                    fig, ax = plt.subplots()
+                    sb.countplot(x=col, data=df, ax=ax)
+                    st.pyplot(fig)
+                except Exception:
+                    st.warning("Unsupported Format....!")
           
         if method == 'dist-plot':
             st.subheader('Distribution Plot')
             # col1,col2 = st.columns(2)
             col = st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
             hist = st.checkbox("Hist",value=True)
-            try:
-                fig, ax = plt.subplots()
-                sb.distplot(x=df[col], ax=ax,hist=hist)
-                st.pyplot(fig)  
-            except Exception:
-                st.warning("Unsupported Format ...!!!")
+            with st.container(border=True):
+                try:
+                    fig, ax = plt.subplots()
+                    sb.distplot(x=df[col], ax=ax,hist=hist)
+                    st.pyplot(fig)  
+                except Exception:
+                    st.warning("Unsupported Format ...!!!")
     if app == 'Bivariant':
         method = st.selectbox("Select Method",['scatter-plot','bar-plot'])
-        x = st.radio("X-Axis",[x for x in df.columns],horizontal=True)
-        y = st.radio("Y-Axis",[x for x in df.columns],horizontal=True)
+        with st.container(border=True):
+            x = st.radio("X-Axis",[x for x in df.columns],horizontal=True)
+        with st.container(border=True):        
+            y = st.radio("Y-Axis",[x for x in df.columns],horizontal=True)
         if method == 'scatter-plot':
             # col1,col2 = st.columns(2)
             st.subheader('Scatter Plot')
-            try:
-                fig, ax = plt.subplots()
-                scatter = ax.scatter(df[x], df[y], c=pd.Categorical(df[x]).codes, cmap='viridis')
-                legend = ax.legend(*scatter.legend_elements(), title=x)
-                ax.add_artist(legend)
-                ax.set_xlabel(x)
-                ax.set_ylabel(y)
-                st.pyplot(fig)
-            except Exception:
-                st.warning("Unsupported Format .....!!!!")
+            with st.container(border=True):
+                try:
+                    fig, ax = plt.subplots()
+                    scatter = ax.scatter(df[x], df[y], c=pd.Categorical(df[x]).codes, cmap='viridis')
+                    legend = ax.legend(*scatter.legend_elements(), title=x)
+                    ax.add_artist(legend)
+                    ax.set_xlabel(x)
+                    ax.set_ylabel(y)
+                    st.pyplot(fig)
+                except Exception:
+                    st.warning("Unsupported Format .....!!!!")
         
         if method == 'bar-plot':
             # col1,col2 = st.columns(2)
             st.subheader('Bar Plot')
-            fig, ax = plt.subplots()
-            scatter = ax.bar(df[x], df[y])
-            ax.set_xlabel(x)
-            ax.set_ylabel(y)
-            st.pyplot(fig)
+            with st.container(border=True):
+                fig, ax = plt.subplots()
+                scatter = ax.bar(df[x], df[y])
+                ax.set_xlabel(x)
+                ax.set_ylabel(y)
+                st.pyplot(fig)
 
 
 def missval():
@@ -229,16 +247,18 @@ def missval():
     miss = df.isnull().sum()
     miss = miss[miss > 0]
     miss_val = miss[miss > 0].index.to_list()
-    st.write(miss)
+    with st.container(border=True):
+        st.write(miss)
     if app=='Drop':
         try:
             if st.button("Drop None Values"):
                 df = df.dropna()
                 df = df.reset_index(drop=True)
                 st.session_state.data['file'] = df
-                st.write(df)
-                st.write(f"Shape After Droping None Values : {df.shape}")
-                st.success("Data Saved Successfully...")
+                with st.container(border=True):
+                    st.write(df)
+                    st.write(f"Shape After Droping None Values : {df.shape}")
+                    st.success("Data Saved Successfully...")
         except Exception:
             st.info("Data Drop Fail...")
     if app=='Fill':
@@ -361,15 +381,17 @@ def save_dataset(df):
 def outlier():
     st.title("Outlier Page")
     # st.image('static/outlier.jpg',width=700)
-    method = st.selectbox("Select Method ...",['Z-Score'],index=0)
+    with st.container(border=True):
+        method = st.selectbox("Select Method ...",['Z-Score'],index=0)
+        st.info("NOTE : This Method is Suggested to be used for Normaly Distributed Or Almost Normaly Distributed")
     df =pd.DataFrame({})
     try:
         df =  st.session_state.data['file']
     except Exception:
         st.warning("DataSet Not Found...!")
     if method=='Z-Score':
-        st.info("NOTE : This Method is Suggested to be used for Normaly Distributed Or Almost Normaly Distributed")
-        cols =st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
+        with st.container(border=True):
+            cols =st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
         col1,col2 = st.columns(2)
         try:
             col2.write(df[cols].describe())
@@ -379,9 +401,11 @@ def outlier():
             col1.write(f"Upper Limit : {upper}")
             col1.write(f"Upper Limit : {lower}")
             st.subheader(" Detected Outlier")
-            st.write(df[(df[cols] > upper) |(df[cols] < lower )])
+            with st.container(border=True):
+                st.write(df[(df[cols] > upper) |(df[cols] < lower )])
             st.subheader("Outlier Removal :")
-            meth = st.selectbox("Method ",['Trimming','Capping'])
+            with st.container(border=True):
+                meth = st.selectbox("Method ",['Trimming','Capping'])
             if meth == 'Trimming':
                 if st.button("Trim"):
                     df = df[(df[cols] < upper) & (df[cols] > lower )]
@@ -389,11 +413,13 @@ def outlier():
                     # st.write(df)
                     # st.write(df.shape)
                     # st.success("Data Trimmed Succesfully...")   
-                save_dataset(df)
+                with st.container(border=True):
+                    save_dataset(df)
             if meth == 'Capping':
                 if st.button("Cap"):
                     df[cols]=np.where(df[cols] > upper,upper,np.where(df[cols] < lower,lower,df[cols]))
-                save_dataset(df)
+                with st.container(border=True):
+                    save_dataset(df)
             # if st.button("Z-Score"):
             #     st.write((df[cols] - df[cols].mean())/df[cols].std())
             
@@ -420,17 +446,19 @@ def encoding():
             #     col2.subheader("Feature Value Count:")
             #     col2.write(df[cols].value_counts())
             if check:
-                col1.subheader("Data:")
-                col1.write(df[col])
+                col2.subheader("Data:")
+                col2.write(df[col])
         else:
             st.warning("No non-numeric columns found.")
     except Exception as e:
         st.warning(f"No Data Found: {e}")
-    st.subheader("One Hot Encoding ...")
-    st.write(df.shape)
+    with st.container(border=True):
+        st.subheader("One Hot Encoding ...")
+        st.write(df.shape)
     try:
         df_encoded = pd.get_dummies(df, columns=col,dtype=int)
-        st.write(df_encoded)
+        with st.container(border=True):
+            st.write(df_encoded)
         st.subheader("Categories:")
         cat = [x for x in df_encoded.columns.tolist() if x not in df.columns.to_list()]
         st.table(cat)
@@ -448,14 +476,13 @@ def encoding():
                 
 def about():
     st.title("About Us")
-    st.header("Improvment")
-    df = {
-        1:'Design',
-        2:'Multiple Methos for Outlier Detection',
-        3:'Multiple Methos for Encoding',
-        4:' More Graph plot options'
-    }
-    st.table(df)
+    try:
+        df =  st.session_state.data['file']
+    except Exception:
+        st.warning("DataSet Not Found...!")
+    # st.write(df)
+    # st.download_button('Download Dataset',df.to_csv())
+    # st.link_button("LINKED-IN",url='https://www.linkedin.com/in/gaurav-kadam-093b75242/')
 
 
         
