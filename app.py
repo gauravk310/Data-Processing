@@ -455,7 +455,7 @@ def about():
         3:'Multiple Methos for Encoding',
         4:' More Graph plot options'
     }
-    st.write(df)
+    st.table(df)
 
 
         
