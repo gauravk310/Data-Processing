@@ -18,7 +18,7 @@ def load_data():
         return df
 
 def home():
-    st.header("Data Engineering ")
+    st.header("Data Engineering Tool")
     # st.image('static/home1.webp',width=800)
     # file = st.file_uploader('Upload Your Dataset')
     file = load_data()
