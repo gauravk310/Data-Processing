@@ -19,7 +19,7 @@ def load_data():
 
 def home():
     st.header("Data Engineering ")
-    st.image('static/home1.webp',width=800)
+    # st.image('static/home1.webp',width=800)
     # file = st.file_uploader('Upload Your Dataset')
     file = load_data()
     if file is not None:
@@ -77,7 +77,7 @@ def select_columns(dataframe, columns):
 
 def clean():
     # st.header("Data Cleaning")
-    st.image("static/dataCleaning.png",width=800)
+    # st.image("static/dataCleaning.png",width=800)
     df = pd.DataFrame({})
     try:
         df =  st.session_state.data['file']
@@ -129,7 +129,7 @@ def clean():
 
 def analysis():
     st.header('Exploratory Data Analysis')
-    st.image('static/eda.jpg',width=700)
+    # st.image('static/eda.jpg',width=700)
     df = pd.DataFrame({})
     try:
         df =  st.session_state.data['file']
@@ -202,7 +202,7 @@ def analysis():
 
 def missval():
     st.title("Missing Values")
-    st.image('static/missingData.jpg',width=600)
+    # st.image('static/missingData.jpg',width=600)
     col1,col2 = st.columns(2)
     app = option_menu(
                 menu_title="Missing Value Operations",
@@ -360,7 +360,7 @@ def save_dataset(df):
 
 def outlier():
     st.title("Outlier Page")
-    st.image('static/outlier.jpg',width=700)
+    # st.image('static/outlier.jpg',width=700)
     method = st.selectbox("Select Method ...",['Z-Score'],index=0)
     df =pd.DataFrame({})
     try:
@@ -403,7 +403,7 @@ def outlier():
 
 def encoding():
     st.title("Encoding Page")
-    st.image('static/ohe.png',width=700)
+    # st.image('static/ohe.png',width=700)
     df = pd.DataFrame({})
     try:
         df =  st.session_state.data['file']
