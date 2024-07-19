@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib.pylab as plt
 import pandas as pd
 import numpy as np
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import PCA
 st.set_page_config(
     page_title="Data Processing & Feature Engineering"
 )
