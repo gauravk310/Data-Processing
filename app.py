@@ -5,6 +5,7 @@ import seaborn as sb
 import matplotlib.pylab as plt
 import pandas as pd
 import numpy as np
+from sklearn.decomposition import PCA
 st.set_page_config(
     page_title="Data Processing & Feature Engineering"
 )
@@ -473,14 +474,41 @@ def encoding():
     except Exception:
         st.info("Data Already Saved ...")
 
+def pca():
+    # st.header('PCA')
+    # df = pd.DataFrame({})
+    # try:
+    #     df =  st.session_state.data['file']
+    # except Exception:
+    #     st.warning("DataSet Not Found...!")
+    # st.write(df)
+    # y  = [x for x in df.columns]
+    # n = st.number_input('Principle Component : ',max_value=len(y),value=len(y),step=1,min_value=1)
+    # if st.button("Apply "):
+    #     pca = PCA(n_components=n)
+    #     x = pca.fit_transform(df)
+    #     with st.container(border=True):
+    #         st.subheader("PCA")
+    #         st.write(x)
+    #     with st.container(border=True):
+    #         st.subheader("PCA Eigen-Vectors")
+    #         st.write(pca.components_)
+    #     with st.container(border=True):
+    #         st.subheader("PCA Components [ Eigen-Values] : ")
+    #         st.write(pca.explained_variance_ratio_)
+    #         st.write(pca.get_covariance())
+    st.info("Page Is Under Construction ...!!!!!")
                 
 def about():
     st.title("About Us")
-    try:
-        df =  st.session_state.data['file']
-    except Exception:
-        st.warning("DataSet Not Found...!")
-    # st.write(df)
+    with st.container(border=True):
+        st.subheader("Name : Gaurav Santosh Kadam")
+        st.text('''Hello Everyone,''')
+        st.text('''
+                Thanks for visiting my tool . 
+This tool will help you to do the Data Analysis and data cleaning .
+I hope that you used it and you love it  ''')
+
     # st.download_button('Download Dataset',df.to_csv())
     # st.link_button("LINKED-IN",url='https://www.linkedin.com/in/gaurav-kadam-093b75242/')
 
@@ -491,8 +519,8 @@ def about():
 with st.sidebar:
         app = option_menu(
             menu_title="Data Processing",
-            options=['Home','Data-Cleaning','Missing-Val','Outlier','Encoding','EDA','About'],
-            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','person'],
+            options=['Home','Data-Cleaning','Missing-Val','Outlier','Encoding','EDA',"PCA",'About'],
+            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','graph-up','person'],
             menu_icon='graph-up',
             default_index=0,
             styles={
@@ -514,6 +542,8 @@ if app =='Outlier':
     outlier()
 if app == 'Encoding':
     encoding()
+if app=='PCA':
+    pca()
 if app =='About':
     about()
         
