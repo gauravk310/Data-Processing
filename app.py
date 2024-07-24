@@ -570,7 +570,7 @@ def feature_engineering():
         st.warning("Unsupported Platform...")
     col1.write(df)
     if app == 'Standardization':
-        if st.checkbox(label='Standardize'):
+        if st.checkbox(label='Standardize',value=False):
                 ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
                 col3,col4=st.columns(2)
                 try:
