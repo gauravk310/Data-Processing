@@ -248,8 +248,6 @@ def analysis():
                 st.pyplot(fig1)
 
 
-
-
 def missval():
     st.title("Missing Values")
     # st.image('static/missingData.jpg',width=600)
@@ -400,7 +398,6 @@ def missval():
         except Exception:
             st.info("Data Already Saved ...")
              
-
 def save_dataset(df):
     try:
         st.session_state.data['file'] = df
@@ -457,7 +454,6 @@ def outlier():
             
         except Exception:
              st.warning("No Dataset Found ...")
-
 
 def encoding():
     st.title("Encoding Page")
@@ -673,7 +669,6 @@ def feature_engineering():
                     st.success("Dataset Saved!")
                     
 
-
 def about():
     st.title("About Us")
     with st.container(border=True):
@@ -735,6 +730,7 @@ Empower your data analysis with our Data Preprocessing Tool, designed to save ti
     
     # st.download_button('Download Dataset',df.to_csv())
     # st.link_button("LINKED-IN",url='https://www.linkedin.com/in/gaurav-kadam-093b75242/')
+
 with st.sidebar:
         app = option_menu(
             menu_title="Data Processing",
