@@ -553,31 +553,44 @@ def feature_engineering():
         df = st.session_state.data['file']
     else:
         st.warning("Dataset Not Found!")
-    col = st.radio("Select Feature for Plotting", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+    try:
+        col = st.radio("Select Feature for Plotting", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+    except Exception:
+        st.warning("Dataset Not Found...")
     st.subheader("Orginal Dataset .")
     bdf = df.copy()
     col1,col2 = st.columns(2)
     col2.subheader("Distribution Plot")
-    fig, ax = plt.subplots()
-    ax.set_title('Original')
-    sb.distplot(bdf[col], ax=ax)
-    col2.pyplot(fig)
+    try:
+        fig, ax = plt.subplots()
+        ax.set_title('Original')
+        sb.distplot(bdf[col], ax=ax)
+        col2.pyplot(fig)
+    except Exception:
+        st.warning("Unsupported Platform...")
     col1.write(df)
     if app == 'Standardization':
         if st.checkbox(label='Standardize'):
                 ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
                 col3,col4=st.columns(2)
-                sc = StandardScaler()
-                sc.fit(df)
-                dft = sc.transform(df)
-                dft = pd.DataFrame(dft, columns=df.columns)
-                col3.subheader("Standardized Dataset")
-                col3.write(dft)
-                col4.subheader('Standardized Dataset Plot ')
-                fig, ax = plt.subplots()
-                sb.distplot(dft[ncol], ax=ax)
-                ax.set_title('Standardized')
-                col4.pyplot(fig)
+                try:
+                    sc = StandardScaler()
+                    sc.fit(df)
+                    dft = sc.transform(df)
+                    dft = pd.DataFrame(dft, columns=df.columns)
+                    col3.subheader("Standardized Dataset")
+                    col3.write(dft)
+                    col4.subheader('Standardized Dataset Plot ')
+                except Exception:
+                    pass
+                try:
+                    fig, ax = plt.subplots()
+                    sb.distplot(dft[ncol], ax=ax)
+                    ax.set_title('Standardized')
+                    col4.pyplot(fig)
+                except Exception:
+                    st.warning("Unsupported Platform...")
+
                 if st.button("Save Dataset"):
                     st.session_state.data['file'] = dft
                     st.write(dft)
@@ -588,17 +601,23 @@ def feature_engineering():
         if method=='MinMaxScaler':
                 ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
                 col3,col4=st.columns(2)
-                ms = MinMaxScaler()
-                ms.fit(df)
-                dft = ms.transform(df)
-                dft = pd.DataFrame(dft, columns=df.columns)
-                col3.subheader("Normalized Dataset")
-                col3.write(dft)
-                col4.subheader('Normalized Dataset Plot ')
+                try:
+                    ms = MinMaxScaler()
+                    ms.fit(df)
+                    dft = ms.transform(df)
+                    dft = pd.DataFrame(dft, columns=df.columns)
+                    col3.subheader("Normalized Dataset")
+                    col3.write(dft)
+                    col4.subheader('Normalized Dataset Plot ')
+                except Exception:
+                    pass
                 fig, ax = plt.subplots()
-                sb.distplot(dft[ncol], ax=ax)
-                ax.set_title('Normalized')
-                col4.pyplot(fig)
+                try:
+                    sb.distplot(dft[ncol], ax=ax)
+                    ax.set_title('Normalized')
+                    col4.pyplot(fig)
+                except Exception:
+                    st.warning('Unsupported Plot')
                 if st.button("Save Dataset"):
                     st.session_state.data['file'] = dft
                     st.write(dft)
@@ -607,17 +626,23 @@ def feature_engineering():
         if method=='RobustScaler':
                 ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
                 col3,col4=st.columns(2)
-                ms = RobustScaler()
-                ms.fit(df)
-                dft = ms.transform(df)
-                dft = pd.DataFrame(dft, columns=df.columns)
-                col3.subheader("Normalized Dataset")
-                col3.write(dft)
-                col4.subheader('Normalized Dataset Plot ')
-                fig, ax = plt.subplots()
-                sb.distplot(dft[ncol], ax=ax)
-                ax.set_title('Normalized')
-                col4.pyplot(fig)
+                try:
+                    ms = RobustScaler()
+                    ms.fit(df)
+                    dft = ms.transform(df)
+                    dft = pd.DataFrame(dft, columns=df.columns)
+                    col3.subheader("Normalized Dataset")
+                    col3.write(dft)
+                    col4.subheader('Normalized Dataset Plot ')
+                except Exception:
+                    pass
+                try:
+                    fig, ax = plt.subplots()
+                    sb.distplot(dft[ncol], ax=ax)
+                    ax.set_title('Normalized')
+                    col4.pyplot(fig)
+                except Exception:
+                    st.warning('Unsupported Plot')
                 if st.button("Save Dataset"):
                     st.session_state.data['file'] = dft
                     st.write(dft)
@@ -625,17 +650,23 @@ def feature_engineering():
         if method=='MaxAbsScaler':
                 ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
                 col3,col4=st.columns(2)
-                ms = MaxAbsScaler()
-                ms.fit(df)
-                dft = ms.transform(df)
-                dft = pd.DataFrame(dft, columns=df.columns)
-                col3.subheader("Normalized Dataset")
-                col3.write(dft)
-                col4.subheader('Normalized Dataset Plot ')
-                fig, ax = plt.subplots()
-                sb.distplot(dft[ncol], ax=ax)
-                ax.set_title('Normalized')
-                col4.pyplot(fig)
+                try:
+                    ms = MaxAbsScaler()
+                    ms.fit(df)
+                    dft = ms.transform(df)
+                    dft = pd.DataFrame(dft, columns=df.columns)
+                    col3.subheader("Normalized Dataset")
+                    col3.write(dft)
+                    col4.subheader('Normalized Dataset Plot ')
+                except Exception:
+                    pass
+                try:
+                    fig, ax = plt.subplots()
+                    sb.distplot(dft[ncol], ax=ax)
+                    ax.set_title('Normalized')
+                    col4.pyplot(fig)
+                except Exception:
+                    st.warning('Unsupported Plot')
                 if st.button("Save Dataset"):
                     st.session_state.data['file'] = dft
                     st.write(dft)
