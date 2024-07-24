@@ -5,6 +5,7 @@ import seaborn as sb
 import matplotlib.pylab as plt
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler,MinMaxScaler,RobustScaler,MaxAbsScaler
 # from sklearn.decomposition import PCA
 st.set_page_config(
     page_title="Data Processing & Feature Engineering"
@@ -13,7 +14,7 @@ st.set_page_config(
 def load_data():
     file = st.file_uploader('Upload Your Dataset')
     if file:
-        st.success("Dataset Upload")
+        st.success("Dataset Uploaded")
         df = pd.read_csv(file)
         df = pd.DataFrame(df)
         return df
@@ -23,12 +24,13 @@ def home():
     # st.image('static/home1.webp',width=800)
     # file = st.file_uploader('Upload Your Dataset')
     file = load_data()
-    if file is not None:
+    if st.button('Save Dataset'):
         if 'data' not in st.session_state:
             st.session_state.data = {}
-        # st.success("Dataset Upload")
-        df = file
-        st.session_state.data['file'] = df
+        st.success("Dataset Saved")
+        st.session_state.data['file'] = file
+    try:
+        df =st.session_state.data['file']
         with st.container(border=True):
             st.subheader('1. Dataset')
             st.write(df)
@@ -74,6 +76,8 @@ def home():
                 colb.write(df[cols].describe())
             except Exception:
                 st.info("Non-Numberical Data Not Found...!")
+    except Exception:
+        st.warning("Dataset Not Found")
 
 def select_columns(dataframe, columns):
     try:
@@ -149,7 +153,7 @@ def analysis():
     
     app = option_menu(
                 menu_title="Exploratory Data Analysis",
-                options=['Univariant','Bivariant'],
+                options=['Univariant','Bivariant','MultiVariant'],
                 icons=['bar-chart','pie-chart'],
                 default_index=0,
                 styles={
@@ -160,8 +164,7 @@ def analysis():
                 },orientation='horizontal'
             )
     if app == 'Univariant':
-
-        method = st.selectbox("Select Method",['count-plot','dist-plot'])
+        method = st.selectbox("Select Method",['count-plot','dist-plot','pdf-plot'])
         if method == 'count-plot':
             with st.container(border=True):
                 st.subheader('Count Plot')
@@ -187,8 +190,21 @@ def analysis():
                     st.pyplot(fig)  
                 except Exception:
                     st.warning("Unsupported Format ...!!!")
+
+        if method == 'pdf-plot':
+            st.subheader('Probability Distribution Plot')
+            # col1,col2 = st.columns(2)
+            col = st.radio("Features",[x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],horizontal=True)
+            hist = st.checkbox("Hist",value=True)
+            with st.container(border=True):
+                try:
+                    fig, ax = plt.subplots()
+                    sb.kdeplot(x=df[col], ax=ax)
+                    st.pyplot(fig)  
+                except Exception:
+                    st.warning("Unsupported Format ...!!!")
     if app == 'Bivariant':
-        method = st.selectbox("Select Method",['scatter-plot','bar-plot'])
+        method = st.selectbox("Select Method",['scatter-plot','bar-plot','joint-plot'])
         with st.container(border=True):
             x = st.radio("X-Axis",[x for x in df.columns],horizontal=True)
         with st.container(border=True):        
@@ -207,7 +223,6 @@ def analysis():
                     st.pyplot(fig)
                 except Exception:
                     st.warning("Unsupported Format .....!!!!")
-        
         if method == 'bar-plot':
             # col1,col2 = st.columns(2)
             st.subheader('Bar Plot')
@@ -217,6 +232,22 @@ def analysis():
                 ax.set_xlabel(x)
                 ax.set_ylabel(y)
                 st.pyplot(fig)
+
+        if method == 'joint-plot':
+            # col1,col2 = st.columns(2)
+            st.subheader('Joint Plot')
+            with st.container(border=True):
+                joint = sb.jointplot(data=df,x=x,y=y)
+                fig1 = joint.fig
+                st.pyplot(fig1)
+    if app=='MultiVariant':
+        if st.button('Analize'):
+            with st.container(border=True):
+                joint = sb.pairplot(data=df)
+                fig1 = joint.fig
+                st.pyplot(fig1)
+
+
 
 
 def missval():
@@ -400,7 +431,7 @@ def outlier():
             upper = round(df[cols].mean() + 3*df[cols].std(),2)
             lower = round(df[cols].mean() - 3*df[cols].std(),2)
             col1.write(f"Upper Limit : {upper}")
-            col1.write(f"Upper Limit : {lower}")
+            col1.write(f"Lower Limit : {lower}")
             st.subheader(" Detected Outlier")
             with st.container(border=True):
                 st.write(df[(df[cols] > upper) |(df[cols] < lower )])
@@ -498,7 +529,120 @@ def encoding():
     #         st.write(pca.explained_variance_ratio_)
     #         st.write(pca.get_covariance())
     # st.info("Page Is Under Construction ...!!!!!")
-                
+
+
+def feature_engineering():
+    st.title("Feature Scaling")
+    col1, col2 = st.columns(2)
+    
+    app = option_menu(
+        menu_title="Feature Scaling Operations",
+        options=['Standardization', 'Normalization'],
+        icons=['graph-up', 'bar-chart'],
+        default_index=0,
+        styles={
+            'container': {'padding': '5px', 'background-color': 'dark'},
+            'icon': {'color': 'white', 'font-size': '25px'},
+            'nav-link': {'color': 'white', 'font-size': '20px', 'text-align': 'center'},
+            'nav-link-selected': {'background-color': '#02ab21'}
+        },
+        orientation='horizontal'
+    )
+    df = pd.DataFrame({})
+    if 'data' in st.session_state and 'file' in st.session_state.data:
+        df = st.session_state.data['file']
+    else:
+        st.warning("Dataset Not Found!")
+    col = st.radio("Select Feature for Plotting", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+    st.subheader("Orginal Dataset .")
+    bdf = df.copy()
+    col1,col2 = st.columns(2)
+    col2.subheader("Distribution Plot")
+    fig, ax = plt.subplots()
+    ax.set_title('Original')
+    sb.distplot(bdf[col], ax=ax)
+    col2.pyplot(fig)
+    col1.write(df)
+    if app == 'Standardization':
+        if st.checkbox(label='Standardize'):
+                ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+                col3,col4=st.columns(2)
+                sc = StandardScaler()
+                sc.fit(df)
+                dft = sc.transform(df)
+                dft = pd.DataFrame(dft, columns=df.columns)
+                col3.subheader("Standardized Dataset")
+                col3.write(dft)
+                col4.subheader('Standardized Dataset Plot ')
+                fig, ax = plt.subplots()
+                sb.distplot(dft[ncol], ax=ax)
+                ax.set_title('Standardized')
+                col4.pyplot(fig)
+                if st.button("Save Dataset"):
+                    st.session_state.data['file'] = dft
+                    st.write(dft)
+                    st.success("Dataset Saved!")
+                    
+    if app == 'Normalization':
+        method = st.radio("Normalization Methdo : ",['MinMaxScaler','RobustScaler','MaxAbsScaler'],horizontal=True)
+        if method=='MinMaxScaler':
+                ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+                col3,col4=st.columns(2)
+                ms = MinMaxScaler()
+                ms.fit(df)
+                dft = ms.transform(df)
+                dft = pd.DataFrame(dft, columns=df.columns)
+                col3.subheader("Normalized Dataset")
+                col3.write(dft)
+                col4.subheader('Normalized Dataset Plot ')
+                fig, ax = plt.subplots()
+                sb.distplot(dft[ncol], ax=ax)
+                ax.set_title('Normalized')
+                col4.pyplot(fig)
+                if st.button("Save Dataset"):
+                    st.session_state.data['file'] = dft
+                    st.write(dft)
+                    st.success("Dataset Saved!")
+
+        if method=='RobustScaler':
+                ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+                col3,col4=st.columns(2)
+                ms = RobustScaler()
+                ms.fit(df)
+                dft = ms.transform(df)
+                dft = pd.DataFrame(dft, columns=df.columns)
+                col3.subheader("Normalized Dataset")
+                col3.write(dft)
+                col4.subheader('Normalized Dataset Plot ')
+                fig, ax = plt.subplots()
+                sb.distplot(dft[ncol], ax=ax)
+                ax.set_title('Normalized')
+                col4.pyplot(fig)
+                if st.button("Save Dataset"):
+                    st.session_state.data['file'] = dft
+                    st.write(dft)
+                    st.success("Dataset Saved!")
+        if method=='MaxAbsScaler':
+                ncol = st.radio("Select Feature for Plot", [x for x in df.columns if pd.api.types.is_numeric_dtype(df[x])],index=0,horizontal=True)
+                col3,col4=st.columns(2)
+                ms = MaxAbsScaler()
+                ms.fit(df)
+                dft = ms.transform(df)
+                dft = pd.DataFrame(dft, columns=df.columns)
+                col3.subheader("Normalized Dataset")
+                col3.write(dft)
+                col4.subheader('Normalized Dataset Plot ')
+                fig, ax = plt.subplots()
+                sb.distplot(dft[ncol], ax=ax)
+                ax.set_title('Normalized')
+                col4.pyplot(fig)
+                if st.button("Save Dataset"):
+                    st.session_state.data['file'] = dft
+                    st.write(dft)
+                    st.success("Dataset Saved!")
+                    
+
+
 def about():
     st.title("About Us")
     with st.container(border=True):
@@ -563,8 +707,8 @@ Empower your data analysis with our Data Preprocessing Tool, designed to save ti
 with st.sidebar:
         app = option_menu(
             menu_title="Data Processing",
-            options=['Home','Data-Cleaning','Missing-Val','Outlier','Encoding','EDA','About'],
-            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','person'],
+            options=['Home','Feature-Selection','Missing-Val','Outlier','Encoding','EDA','Feature-Scaling','About'],
+            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','table','person'],
             menu_icon='graph-up',
             default_index=0,
             styles={
@@ -576,7 +720,7 @@ with st.sidebar:
         )
 if app =='Home':
     home()
-if app == 'Data-Cleaning':
+if app == 'Feature-Selection':
     clean()
 if app =='EDA':
     analysis()
@@ -586,6 +730,8 @@ if app =='Outlier':
     outlier()
 if app == 'Encoding':
     encoding()
+if app=='Feature-Scaling':
+    feature_engineering()
 # if app=='PCA':
 #     pca()
 if app =='About':
