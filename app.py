@@ -27,8 +27,9 @@ def home():
     if st.button('Save Dataset'):
         if 'data' not in st.session_state:
             st.session_state.data = {}
-        st.success("Dataset Saved")
         st.session_state.data['file'] = file
+        st.balloons()
+        st.success("Dataset Saved")
     try:
         df =st.session_state.data['file']
         with st.container(border=True):
