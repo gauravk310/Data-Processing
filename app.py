@@ -6,24 +6,30 @@ import matplotlib.pylab as plt
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler,MinMaxScaler,RobustScaler,MaxAbsScaler
-# from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA
 st.set_page_config(
     page_title="Data Processing & Feature Engineering"
 )
 
 def load_data():
     file = st.file_uploader('Upload Your Dataset')
-    if file:
-        st.success("Dataset Uploaded")
-        df = pd.read_csv(file)
-        df = pd.DataFrame(df)
-        return df
+    try:
+        if file:
+            st.success("Dataset Uploaded")
+            df = pd.read_csv(file)
+            df = pd.DataFrame(df)
+            return df
+    except:
+        st.warning("Please Provide CSV Dataset...")
 
 def home():
     st.header("Data Engineering Tool")
     # st.image('static/home1.webp',width=800)
     # file = st.file_uploader('Upload Your Dataset')
-    file = load_data()
+    try:
+        file = load_data()
+    except:
+        st.info("Unsupported Format")
     if st.button('Save Dataset'):
         if 'data' not in st.session_state:
             st.session_state.data = {}
@@ -502,32 +508,43 @@ def encoding():
     except Exception:
         st.info("Data Already Saved ...")
 
-# def pca():
-    # st.header('PCA')
-    # df = pd.DataFrame({})
-    # try:
-    #     df =  st.session_state.data['file']
-    # except Exception:
-    #     st.warning("DataSet Not Found...!")
-    # st.write(df)
-    # y  = [x for x in df.columns]
-    # n = st.number_input('Principle Component : ',max_value=len(y),value=len(y),step=1,min_value=1)
-    # if st.button("Apply "):
-    #     pca = PCA(n_components=n)
-    #     x = pca.fit_transform(df)
-    #     with st.container(border=True):
-    #         st.subheader("PCA")
-    #         st.write(x)
-    #     with st.container(border=True):
-    #         st.subheader("PCA Eigen-Vectors")
-    #         st.write(pca.components_)
-    #     with st.container(border=True):
-    #         st.subheader("PCA Components [ Eigen-Values] : ")
-    #         st.write(pca.explained_variance_ratio_)
-    #         st.write(pca.get_covariance())
-    # st.info("Page Is Under Construction ...!!!!!")
-
-
+def pca():
+    st.header('PCA')
+    df = pd.DataFrame({})
+    try:
+        df =  st.session_state.data['file']
+    except Exception:
+        st.warning("DataSet Not Found...!")
+    st.write(df)
+    try:
+        y  = [x for x in df.columns]
+        n = st.number_input('Principle Component : ',max_value=len(y),value=len(y),step=1,min_value=1)
+        if st.checkbox("Apply ",value=False):
+            pca = PCA(n_components=n)
+            x = pca.fit_transform(df)
+            with st.container(border=True):
+                st.subheader("PCA")
+                st.write(x)
+            with st.container(border=True):
+                st.subheader("PCA Eigen-Vectors")
+                st.write(pca.components_)
+            with st.container(border=True):
+                st.subheader("PCA Components [ Eigen-Values] : ")
+                st.write(pca.explained_variance_ratio_)
+                st.write(pca.get_covariance())
+        try:
+            if st.button("Save Dataset"):
+                x = pd.DataFrame(x)
+                st.session_state.data['file'] = x
+                st.write(x)
+                st.write(x.shape)
+                st.success("Data Saved Successfully...")
+        except Exception:
+            st.info("Data Already Saved ...")
+    
+    except:
+        st.info("Dataset Not Found  ...!!!!!")
+    
 def feature_engineering():
     st.title("Feature Scaling")
     col1, col2 = st.columns(2)
@@ -735,8 +752,8 @@ Empower your data analysis with our Data Preprocessing Tool, designed to save ti
 with st.sidebar:
         app = option_menu(
             menu_title="Data Processing",
-            options=['Home','Feature-Selection','Missing-Val','Outlier','Encoding','EDA','Feature-Scaling','About'],
-            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','table','person'],
+            options=['Home','Feature-Selection','Missing-Val','Outlier','Encoding','EDA','Feature-Scaling','PCA','About'],
+            icons=['house-fill','file-text','bar-chart','table','pie-chart','calendar','table','bar-chart','person'],
             menu_icon='graph-up',
             default_index=0,
             styles={
@@ -760,7 +777,7 @@ if app == 'Encoding':
     encoding()
 if app=='Feature-Scaling':
     feature_engineering()
-# if app=='PCA':
-#     pca()
+if app=='PCA':
+    pca()
 if app =='About':
     about()
