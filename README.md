@@ -57,10 +57,6 @@ To test the Data Visualization Dashboard, follow these steps:
 2. **Integration Tests**: Run the integration tests using `pytest tests/integration_tests.py`
 3. **Manual Testing**: Test the application manually, using sample datasets and visualizations
 
-📸 Screenshots
--------------
-
-
 
 📦 API Reference
 ----------------
