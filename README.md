@@ -74,7 +74,7 @@ visit Project
 (https://dpbysorry.streamlit.app/
 👤 Author
 --------
-The Data Visualization Dashboard was created by [Gaurav Kadam](https://example.com).
+The Data Visualization Dashboard was created by [Gaurav Kadam](https://dpbysorry.streamlit.app/).
 
 📝 License
 --------
