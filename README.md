@@ -61,7 +61,7 @@ To test the Data Visualization Dashboard, follow these steps:
 -------------
 [Image 1: Dashboard Overview](https://via.placeholder.com/800x600)
 [Image 2: Interactive Visualization](https://via.placeholder.com/800x600)
-[Image 3: Customizable Interface](https://via.placeholder.com/800x600)
+
 
 📦 API Reference
 ----------------
