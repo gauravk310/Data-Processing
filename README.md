@@ -59,7 +59,7 @@ To test the Data Visualization Dashboard, follow these steps:
 
 📸 Screenshots
 -------------
-[Image 1: Dashboard Overview](https://via.placeholder.com/800x600)
+
 
 
 📦 API Reference
